@@ -1,0 +1,304 @@
+
+PK_3_2.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000162  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000001d6  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000004  00800060  00800060  000001d6  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000001d6  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000208  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000050  00000000  00000000  00000244  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000072d  00000000  00000000  00000294  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000005a7  00000000  00000000  000009c1  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000348  00000000  00000000  00000f68  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000000ac  00000000  00000000  000012b0  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    0000039c  00000000  00000000  0000135c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000001b2  00000000  00000000  000016f8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000040  00000000  00000000  000018aa  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	7d c0       	rjmp	.+250    	; 0xfe <__vector_1>
+   4:	94 c0       	rjmp	.+296    	; 0x12e <__vector_2>
+   6:	1f c0       	rjmp	.+62     	; 0x46 <__bad_interrupt>
+   8:	1e c0       	rjmp	.+60     	; 0x46 <__bad_interrupt>
+   a:	1d c0       	rjmp	.+58     	; 0x46 <__bad_interrupt>
+   c:	1c c0       	rjmp	.+56     	; 0x46 <__bad_interrupt>
+   e:	1b c0       	rjmp	.+54     	; 0x46 <__bad_interrupt>
+  10:	1a c0       	rjmp	.+52     	; 0x46 <__bad_interrupt>
+  12:	19 c0       	rjmp	.+50     	; 0x46 <__bad_interrupt>
+  14:	18 c0       	rjmp	.+48     	; 0x46 <__bad_interrupt>
+  16:	17 c0       	rjmp	.+46     	; 0x46 <__bad_interrupt>
+  18:	16 c0       	rjmp	.+44     	; 0x46 <__bad_interrupt>
+  1a:	15 c0       	rjmp	.+42     	; 0x46 <__bad_interrupt>
+  1c:	14 c0       	rjmp	.+40     	; 0x46 <__bad_interrupt>
+  1e:	13 c0       	rjmp	.+38     	; 0x46 <__bad_interrupt>
+  20:	12 c0       	rjmp	.+36     	; 0x46 <__bad_interrupt>
+  22:	11 c0       	rjmp	.+34     	; 0x46 <__bad_interrupt>
+  24:	10 c0       	rjmp	.+32     	; 0x46 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_clear_bss>:
+  32:	20 e0       	ldi	r18, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	01 c0       	rjmp	.+2      	; 0x3c <.do_clear_bss_start>
+
+0000003a <.do_clear_bss_loop>:
+  3a:	1d 92       	st	X+, r1
+
+0000003c <.do_clear_bss_start>:
+  3c:	a4 36       	cpi	r26, 0x64	; 100
+  3e:	b2 07       	cpc	r27, r18
+  40:	e1 f7       	brne	.-8      	; 0x3a <.do_clear_bss_loop>
+  42:	30 d0       	rcall	.+96     	; 0xa4 <main>
+  44:	8c c0       	rjmp	.+280    	; 0x15e <_exit>
+
+00000046 <__bad_interrupt>:
+  46:	dc cf       	rjmp	.-72     	; 0x0 <__vectors>
+
+00000048 <_Z4initv>:
+//isr aktiv
+//falling edge
+//gsr
+
+void init(){
+	DDRB = 0b11111111;
+  48:	8f ef       	ldi	r24, 0xFF	; 255
+  4a:	87 bb       	out	0x17, r24	; 23
+	DDRD = 0b00000000;
+  4c:	11 ba       	out	0x11, r1	; 17
+	
+	PORTD = 0xFF;
+  4e:	82 bb       	out	0x12, r24	; 18
+  50:	08 95       	ret
+
+00000052 <_Z14init_interruptv>:
+}
+
+void init_interrupt(){
+	//Interrupts sperren
+	cli();
+  52:	f8 94       	cli
+	
+	//Interrupt wird durch falling edge ausgelöst
+	MCUCR |= (1 << ISC10);   
+  54:	85 b7       	in	r24, 0x35	; 53
+  56:	84 60       	ori	r24, 0x04	; 4
+  58:	85 bf       	out	0x35, r24	; 53
+	//Interrupts registrieren
+	GICR |= (1 << INT0) | (1 << INT1);
+  5a:	8b b7       	in	r24, 0x3b	; 59
+  5c:	80 6c       	ori	r24, 0xC0	; 192
+  5e:	8b bf       	out	0x3b, r24	; 59
+	
+	//Interrupts freigeben
+	sei();
+  60:	78 94       	sei
+  62:	08 95       	ret
+
+00000064 <_Z6ledRedv>:
+}
+
+void ledRed(){
+	PORTB = (1 << PB0);
+  64:	81 e0       	ldi	r24, 0x01	; 1
+  66:	88 bb       	out	0x18, r24	; 24
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  68:	8f e4       	ldi	r24, 0x4F	; 79
+  6a:	93 ec       	ldi	r25, 0xC3	; 195
+  6c:	01 97       	sbiw	r24, 0x01	; 1
+  6e:	f1 f7       	brne	.-4      	; 0x6c <_Z6ledRedv+0x8>
+  70:	00 c0       	rjmp	.+0      	; 0x72 <_Z6ledRedv+0xe>
+  72:	00 00       	nop
+	_delay_ms(200);
+	PORTB = (0 << PB0);
+  74:	18 ba       	out	0x18, r1	; 24
+  76:	8f e4       	ldi	r24, 0x4F	; 79
+  78:	93 ec       	ldi	r25, 0xC3	; 195
+  7a:	01 97       	sbiw	r24, 0x01	; 1
+  7c:	f1 f7       	brne	.-4      	; 0x7a <_Z6ledRedv+0x16>
+  7e:	00 c0       	rjmp	.+0      	; 0x80 <_Z6ledRedv+0x1c>
+  80:	00 00       	nop
+  82:	08 95       	ret
+
+00000084 <_Z9ledYellowv>:
+	_delay_ms(200);
+}
+
+void ledYellow(){
+	PORTB = (1 << PB1);
+  84:	82 e0       	ldi	r24, 0x02	; 2
+  86:	88 bb       	out	0x18, r24	; 24
+  88:	8f e4       	ldi	r24, 0x4F	; 79
+  8a:	93 ec       	ldi	r25, 0xC3	; 195
+  8c:	01 97       	sbiw	r24, 0x01	; 1
+  8e:	f1 f7       	brne	.-4      	; 0x8c <_Z9ledYellowv+0x8>
+  90:	00 c0       	rjmp	.+0      	; 0x92 <_Z9ledYellowv+0xe>
+  92:	00 00       	nop
+	_delay_ms(200);
+	PORTB = (0 << PB1);
+  94:	18 ba       	out	0x18, r1	; 24
+  96:	8f e4       	ldi	r24, 0x4F	; 79
+  98:	93 ec       	ldi	r25, 0xC3	; 195
+  9a:	01 97       	sbiw	r24, 0x01	; 1
+  9c:	f1 f7       	brne	.-4      	; 0x9a <_Z9ledYellowv+0x16>
+  9e:	00 c0       	rjmp	.+0      	; 0xa0 <_Z9ledYellowv+0x1c>
+  a0:	00 00       	nop
+  a2:	08 95       	ret
+
+000000a4 <main>:
+}
+
+int main(void)
+{
+    
+	init();
+  a4:	d1 df       	rcall	.-94     	; 0x48 <_Z4initv>
+	init_interrupt();
+  a6:	d5 df       	rcall	.-86     	; 0x52 <_Z14init_interruptv>
+	
+    while (1) 
+    {
+		if(red && !yellow){
+  a8:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <red>
+  ac:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <red+0x1>
+  b0:	89 2b       	or	r24, r25
+  b2:	a9 f0       	breq	.+42     	; 0xde <main+0x3a>
+  b4:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
+  b8:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
+  bc:	89 2b       	or	r24, r25
+  be:	69 f0       	breq	.+26     	; 0xda <main+0x36>
+  c0:	0e c0       	rjmp	.+28     	; 0xde <main+0x3a>
+			ledRed();
+		}
+		else if(!red && yellow){
+  c2:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
+  c6:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
+  ca:	89 2b       	or	r24, r25
+  cc:	79 f4       	brne	.+30     	; 0xec <main+0x48>
+  ce:	10 c0       	rjmp	.+32     	; 0xf0 <main+0x4c>
+			ledYellow();
+		}
+		else if(!red && !yellow){
+  d0:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
+  d4:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
+  d8:	e7 cf       	rjmp	.-50     	; 0xa8 <main+0x4>
+	init_interrupt();
+	
+    while (1) 
+    {
+		if(red && !yellow){
+			ledRed();
+  da:	c4 df       	rcall	.-120    	; 0x64 <_Z6ledRedv>
+  dc:	e5 cf       	rjmp	.-54     	; 0xa8 <main+0x4>
+		}
+		else if(!red && yellow){
+  de:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <red>
+  e2:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <red+0x1>
+  e6:	89 2b       	or	r24, r25
+  e8:	61 f3       	breq	.-40     	; 0xc2 <main+0x1e>
+  ea:	02 c0       	rjmp	.+4      	; 0xf0 <main+0x4c>
+			ledYellow();
+  ec:	cb df       	rcall	.-106    	; 0x84 <_Z9ledYellowv>
+  ee:	dc cf       	rjmp	.-72     	; 0xa8 <main+0x4>
+		}
+		else if(!red && !yellow){
+  f0:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <red>
+  f4:	90 91 63 00 	lds	r25, 0x0063	; 0x800063 <red+0x1>
+  f8:	89 2b       	or	r24, r25
+  fa:	51 f3       	breq	.-44     	; 0xd0 <main+0x2c>
+  fc:	d5 cf       	rjmp	.-86     	; 0xa8 <main+0x4>
+
+000000fe <__vector_1>:
+		}
+    }
+}
+
+//PIND 2
+ISR(INT0_vect){
+  fe:	1f 92       	push	r1
+ 100:	0f 92       	push	r0
+ 102:	0f b6       	in	r0, 0x3f	; 63
+ 104:	0f 92       	push	r0
+ 106:	11 24       	eor	r1, r1
+ 108:	8f 93       	push	r24
+ 10a:	9f 93       	push	r25
+	red = true;
+ 10c:	81 e0       	ldi	r24, 0x01	; 1
+ 10e:	90 e0       	ldi	r25, 0x00	; 0
+ 110:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <red+0x1>
+ 114:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <red>
+	yellow = false;
+ 118:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <_edata+0x1>
+ 11c:	10 92 60 00 	sts	0x0060, r1	; 0x800060 <_edata>
+}
+ 120:	9f 91       	pop	r25
+ 122:	8f 91       	pop	r24
+ 124:	0f 90       	pop	r0
+ 126:	0f be       	out	0x3f, r0	; 63
+ 128:	0f 90       	pop	r0
+ 12a:	1f 90       	pop	r1
+ 12c:	18 95       	reti
+
+0000012e <__vector_2>:
+
+//PIND 3
+ISR(INT1_vect){
+ 12e:	1f 92       	push	r1
+ 130:	0f 92       	push	r0
+ 132:	0f b6       	in	r0, 0x3f	; 63
+ 134:	0f 92       	push	r0
+ 136:	11 24       	eor	r1, r1
+ 138:	8f 93       	push	r24
+ 13a:	9f 93       	push	r25
+	red = false;
+ 13c:	10 92 63 00 	sts	0x0063, r1	; 0x800063 <red+0x1>
+ 140:	10 92 62 00 	sts	0x0062, r1	; 0x800062 <red>
+	yellow = true;
+ 144:	81 e0       	ldi	r24, 0x01	; 1
+ 146:	90 e0       	ldi	r25, 0x00	; 0
+ 148:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <_edata+0x1>
+ 14c:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <_edata>
+}
+ 150:	9f 91       	pop	r25
+ 152:	8f 91       	pop	r24
+ 154:	0f 90       	pop	r0
+ 156:	0f be       	out	0x3f, r0	; 63
+ 158:	0f 90       	pop	r0
+ 15a:	1f 90       	pop	r1
+ 15c:	18 95       	reti
+
+0000015e <_exit>:
+ 15e:	f8 94       	cli
+
+00000160 <__stop_program>:
+ 160:	ff cf       	rjmp	.-2      	; 0x160 <__stop_program>

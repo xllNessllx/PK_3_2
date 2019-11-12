@@ -5,31 +5,37 @@
  * Author : Ness
  */ 
 
+#define F_CPU 1000000UL
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define F_CPU 1000000UL
-bool red = false;
-bool yellow = false;
+volatile int red = false;
+volatile int yellow = false;
 
-//PIND 2
-ISR(INT0_vect){
-	red = true;
-	yellow false;
-}
-
-//PIND 3
-ISR(INT1_vect){
-	red = false;
-	yellow = true;
-}
+//isr aktiv
+//falling edge
+//gsr
 
 void init(){
 	DDRB = 0b11111111;
-	DDRC = 0b00000000;
+	DDRD = 0b00000000;
 	
-	PORTC = 0xFF;
+	PORTD = 0xFF;
+}
+
+void init_interrupt(){
+	//Interrupts sperren
+	cli();
+	
+	//Interrupt wird durch falling edge ausgelöst
+	MCUCR |= (1 << ISC10);   
+	//Interrupts registrieren
+	GICR |= (1 << INT0) | (1 << INT1);
+	
+	//Interrupts freigeben
+	sei();
 }
 
 void ledRed(){
@@ -49,7 +55,8 @@ void ledYellow(){
 int main(void)
 {
     
-	init()
+	init();
+	init_interrupt();
 	
     while (1) 
     {
@@ -65,3 +72,14 @@ int main(void)
     }
 }
 
+//PIND 2
+ISR(INT0_vect){
+	red = true;
+	yellow = false;
+}
+
+//PIND 3
+ISR(INT1_vect){
+	red = false;
+	yellow = true;
+}
