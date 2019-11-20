@@ -60,26 +60,28 @@ int main(void)
 	
     while (1) 
     {
+		
+		if(!red && yellow){
+			ledYellow();
+		}
+		
 		if(red && !yellow){
 			ledRed();
 		}
-		else if(!red && yellow){
-			ledYellow();
-		}
-		else if(!red && !yellow){
-			//Kein Switch aktiviert
-		}
+		
     }
 }
 
 //PIND 2
 ISR(INT0_vect){
-	red = true;
+	_delay_ms(200);
+	red = !red;
 	yellow = false;
 }
 
 //PIND 3
 ISR(INT1_vect){
+	_delay_ms(200);
+	yellow = !yellow;
 	red = false;
-	yellow = true;
 }
